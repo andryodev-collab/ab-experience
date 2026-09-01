@@ -23,44 +23,50 @@ export function initMotion({ bhState, reduced, getIsMobile, onWordSignal }) {
     if(next===headerVisible)return;
     headerVisible=next;
     header?.classList.toggle('visible',next);
-    gsap.to(header,{opacity:next?1:0,duration:.2,overwrite:true});
+    gsap.to(header,{opacity:next?1:0,duration:.22,overwrite:true});
   };
   addEventListener('scroll',syncHeader,{passive:true});
   syncHeader();
 
-  gsap.to('#heroCopy',{opacity:.05,y:-42,scale:.975,ease:'none',scrollTrigger:{trigger:'.hero-stage',start:'48% top',end:'bottom top',scrub:true}});
-  gsap.to(bhState,{scale:.76,refOpacity:.22,ease:'none',scrollTrigger:{trigger:'.hero-stage',start:'20% top',end:'bottom top',scrub:true}});
+  gsap.to('#heroCopy',{opacity:.08,y:-26,scale:.988,ease:'none',scrollTrigger:{trigger:'.hero-stage',start:'58% top',end:'bottom top',scrub:true}});
+  gsap.to(bhState,{scale:.74,refOpacity:.2,ease:'none',scrollTrigger:{trigger:'.hero-stage',start:'24% top',end:'bottom top',scrub:true}});
 
   huds.forEach((card,i)=>{
-    const coarse=getIsMobile();
+    const mobile=getIsMobile();
     const direction=i%2===0?-1:1;
     const bar=card.querySelector('.bar');
-    gsap.set(card,coarse
-      ? {opacity:0,y:44,x:0,z:0,scale:.93,rotationX:0,rotationY:0,transformPerspective:1000}
-      : {opacity:0,y:48,x:direction*18,z:-110,scale:.95,rotationY:direction*-3,transformPerspective:1200}
+    gsap.set(card,mobile
+      ? {opacity:0,y:28,scale:.94,rotationX:0,rotationY:0,transformPerspective:900}
+      : {opacity:0,y:42,x:direction*24,z:-150,scale:.92,rotationY:direction*-7,rotationX:3,transformPerspective:1200}
     );
     gsap.set(bar,{opacity:0,scaleX:0,transformOrigin:'left center'});
 
-    const tl=gsap.timeline({scrollTrigger:{trigger:card,start:coarse?'top 90%':'top 92%',end:coarse?'bottom 12%':'bottom 8%',scrub:true,invalidateOnRefresh:true}});
-    if(coarse){
-      tl.to(card,{opacity:1,y:0,x:0,z:0,scale:1,rotationX:0,rotationY:0,duration:.34,ease:'power2.out'},0)
-        .to(bar,{opacity:.68,scaleX:1,duration:.20},.36)
-        .to(card,{opacity:.24,y:-24,scale:.965,duration:.24,ease:'power2.in'},.88);
-    }else{
-      tl.to(card,{opacity:1,y:0,x:0,z:70+i*18,scale:1,rotationY:direction*2,duration:.38,ease:'power2.out'},0)
-        .to(bar,{opacity:.65,scaleX:1,duration:.18},.22)
-        .to(card,{opacity:.12,y:-42,x:direction*-12,z:-150,scale:.96,rotationY:direction*-2,duration:.34,ease:'power2.in'},.66);
-    }
+    ScrollTrigger.create({
+      trigger:card,
+      start:mobile?'top 88%':'top 90%',
+      once:true,
+      onEnter:()=>{
+        const tl=gsap.timeline();
+        tl.to(card,mobile
+          ? {opacity:1,y:0,scale:1,duration:.72,ease:'power4.out'}
+          : {opacity:1,y:0,x:0,z:48+i*10,scale:1,rotationY:direction*1.8,rotationX:0,duration:.92,ease:'expo.out'})
+          .to(bar,{opacity:.72,scaleX:1,duration:.34,ease:'power2.out'},mobile?-.28:-.46);
+      }
+    });
   });
 
   gsap.utils.toArray('.word').forEach((el,i)=>{
-    gsap.set(el,{opacity:1,y:0,scale:1,filter:'none'});
-    gsap.to(el,{opacity:.14,ease:'none',scrollTrigger:{trigger:el,start:'center 34%',end:'bottom 8%',scrub:true}});
     ScrollTrigger.create({trigger:el,start:'top 64%',end:'bottom 36%',onEnter:()=>onWordSignal?.(i),onEnterBack:()=>onWordSignal?.(i)});
   });
 
-  gsap.utils.toArray('.service').forEach(el=>{
-    gsap.fromTo(el,{opacity:1,y:18},{opacity:1,y:0,ease:'none',scrollTrigger:{trigger:el,start:'top 92%',end:'top 66%',scrub:true}});
+  gsap.utils.toArray('.service').forEach((el,i)=>{
+    gsap.set(el,{opacity:0,y:getIsMobile()?18:26,scale:.99});
+    ScrollTrigger.create({
+      trigger:el,
+      start:'top 90%',
+      once:true,
+      onEnter:()=>gsap.to(el,{opacity:1,y:0,scale:1,duration:.68+i*.03,ease:'power3.out',overwrite:true})
+    });
   });
 
   const process=document.querySelector('.process'),progress=document.querySelector('.timeline-progress'),beacon=document.querySelector('.timeline-beacon'),steps=gsap.utils.toArray('.process .step');
@@ -72,7 +78,12 @@ export function initMotion({ bhState, reduced, getIsMobile, onWordSignal }) {
       if(beacon)gsap.set(beacon,vertical?{top:0,left:'50%'}:{left:0,top:'50%'});
       gsap.to(progress,{[vertical?'scaleY':'scaleX']:1,ease:'none',scrollTrigger:{trigger:process,start:'top 76%',end:'bottom 30%',scrub:true}});
       if(beacon)gsap.to(beacon,{...(vertical?{top:'100%'}:{left:'100%'}),ease:'none',scrollTrigger:{trigger:process,start:'top 76%',end:'bottom 30%',scrub:true}});
-      steps.forEach(step=>gsap.to(step,{'--step-light':1,color:'#fff',ease:'none',scrollTrigger:{trigger:step,start:'top 76%',end:'top 54%',scrub:true}}));
+      steps.forEach(step=>ScrollTrigger.create({
+        trigger:step,
+        start:'top 72%',
+        once:true,
+        onEnter:()=>gsap.to(step,{'--step-light':1,color:'#fff',duration:.38,ease:'power2.out'})
+      }));
     });
   }
 
