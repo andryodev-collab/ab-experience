@@ -1,0 +1,26 @@
+/* Short landscape: compact but still free-flowing */
+@media (max-height:600px) and (orientation:landscape){
+  .site-header{padding-top:.65rem;padding-bottom:.65rem}
+  .hero-stage{min-height:100svh;padding-top:4.2rem;padding-bottom:2.5rem;align-items:center}.hero-copy{width:min(62vw,650px);text-align:left;margin:0}.hero-copy h1{font-size:clamp(2.5rem,7vw,4.7rem)}.hero-copy p{font-size:.9rem;max-width:520px}.scroll-hint{display:none}
+  .hud-layer{display:grid;grid-template-columns:1fr 1fr;max-width:880px;gap:2rem 4rem;padding:5rem 2rem 6rem}.hud{width:100%;min-height:98px}.hud small{font-size:.58rem}
+  .section{padding-top:5rem;padding-bottom:5rem}.statement{padding-top:5rem;padding-bottom:5rem}.statement-inner{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}.word{font-size:clamp(2.1rem,7vw,4rem)}
+  .game-field{height:280px}.cta{padding-top:5rem;padding-bottom:5rem}.cta-transmission{width:min(300px,55vw)}
+}
+
+@media (max-height:600px) and (orientation:landscape) and (pointer:coarse){
+  .hud-layer{display:flex;max-width:520px;flex-direction:column;align-items:center;gap:4.5rem;padding:4.5rem 1rem 5.5rem}
+  .hud{width:min(62vw,340px);min-height:110px;margin-inline:auto;transform-origin:center!important}
+  .statement-inner{display:flex;grid-template-columns:none;flex-direction:column;gap:0}
+  .word{width:100%;min-height:62svh;font-size:clamp(2.2rem,7vw,3.6rem)}
+  .word:nth-child(even){justify-content:flex-end;text-align:right}.word:nth-child(odd){justify-content:flex-start;text-align:left}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .journey-core{display:none}.hud::before,.hud::after,.cta-orbit,.cta-signal{animation:none!important}.timeline-beacon{display:none}
+}
+
+.char-reveal .reveal-word{display:inline-block;white-space:nowrap}
+.char-reveal .reveal-char{display:inline-block;opacity:0;will-change:opacity}
+.app-fallback .char-reveal .reveal-char{opacity:1!important}
+@media (prefers-reduced-motion:reduce){.char-reveal .reveal-char{opacity:1!important;will-change:auto}}
