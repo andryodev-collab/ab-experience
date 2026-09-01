@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AB — direção digital interativa por Andryo Barbosa. Sites, landing pages e experiências autorais criadas para transformar presença em memória." />
+  <meta name="theme-color" content="#020308" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="AB — Andryo Barbosa / Interactive Digital Direction" />
+  <meta property="og:description" content="Experiências digitais autorais com direção, código e movimento." />
+  <meta property="og:image" content="assets/images/ab-social.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+  <title>AB — Andryo Barbosa / Interactive Digital Direction</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css" />
+
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"}}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+<audio id="ambientAudio" data-src="assets/audio/ab-cosmic-score.mp3" loop preload="none"></audio>
+  <canvas id="space-canvas" aria-hidden="true"></canvas>
+  <div class="cosmic-media" id="cosmicMedia" aria-hidden="true"></div>
+  <div class="nebula-media" id="nebulaMedia" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="intro intro-min" id="intro" aria-label="Introdução visual AB">
+    <div class="intro-min-center">
+      <span class="intro-min-dot" aria-hidden="true"></span>
+      <div class="intro-min-mark" id="abSymbol" aria-label="AB">AB</div>
+      <div class="intro-min-name">ANDRYO BARBOSA</div>
+      <div class="intro-min-role">INTERACTIVE DIGITAL DIRECTION</div>
+      <span class="intro-min-wave" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="journey-core" id="journeyCore" data-mode="origin" aria-hidden="true">
+    <span class="jc-ring"></span><span class="jc-ring r2"></span><span class="jc-cross"></span><span class="jc-core"></span><span class="jc-label" id="journeyLabel">ORIGIN / AB</span>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#inicio" aria-label="AB início">AB</a>
+    <div class="header-actions"><button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="Ativar trilha ambiente"><span class="sound-dot"></span><span id="soundLabel">SOM OFF</span></button><button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span></button></div>
+    <nav class="nav" id="mainNav" aria-label="Navegação principal">
+      <a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#sobre">Sobre</a><a href="#processo">Processo</a><a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <main class="site" id="main-content">
+    <section class="portal-scene" id="inicio">
+      <div class="portal-sticky">
+        <div class="hero-stage">
+          <div id="blackHoleAnchor" aria-hidden="true"></div>
+          <div class="hero-copy" id="heroCopy"><span class="hero-kicker">AB / EXPERIÊNCIAS DIGITAIS</span><h1>Algumas marcas passam.<br><em>Outras criam gravidade.</em></h1><p>Eu desenho experiências digitais que puxam o olhar, sustentam atenção e transformam presença em memória.</p></div>
+          <div class="scroll-hint">scroll / iniciar trajetória</div>
+        </div>
+        <div class="hud-layer" id="hudLayer" aria-label="Princípios da experiência AB">
+          <article class="hud hud1" data-depth="14"><div class="eyebrow">SIGNAL / 01</div><h3>O primeiro segundo decide.</h3><div class="bar"></div><small>Antes de entender sua marca, alguém já sentiu se ela merece atenção.</small></article>
+          <article class="hud hud2" data-depth="22"><div class="eyebrow">SIGNAL / 02</div><h3>Atenção precisa de destino.</h3><div class="bar"></div><small>Curiosidade vira caminho. Caminho vira ação.</small></article>
+          <article class="hud hud3" data-depth="30"><div class="eyebrow">SIGNAL / 03</div><h3>Ser diferente não é enfeite.</h3><div class="bar"></div><small>É o que impede sua marca de desaparecer na próxima rolagem.</small></article>
+          <article class="hud hud4" data-depth="18"><div class="eyebrow">SIGNAL / 04</div><h3>Resultado deixa rastro.</h3><div class="bar"></div><small>Design, clareza e movimento fazem a experiência continuar depois do clique.</small></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section statement">
+      <div class="statement-inner">
+        <div class="word w1">ATRAÇÃO</div><div class="word w2">RITMO</div><div class="word w3">PRESENÇA</div><div class="word w4">MEMÓRIA</div><div class="word w5">AÇÃO</div>
+      </div>
+    </section>
+
+    <section class="section services" id="servicos">
+      <div class="services-wrap">
+        <div class="section-label">O que ganha forma aqui</div>
+        <h2 class="section-title">O digital pode<br>informar.<br><em>Eu quero que envolva.</em></h2>
+        <article class="service"><div class="num">01</div><h3>Landing Pages</h3><p>Uma página com foco absoluto: atrair, conduzir e transformar interesse em próxima ação.</p></article>
+        <article class="service"><div class="num">02</div><h3>Sites Autorais</h3><p>Presenças digitais com identidade própria — para sua marca não parecer uma variação do que já existe.</p></article>
+        <article class="service"><div class="num">03</div><h3>Experiências Digitais</h3><p>Interface, narrativa e tecnologia trabalhando juntas até o visitante esquecer que está apenas navegando.</p></article>
+        <article class="service"><div class="num">04</div><h3>Motion & Interação</h3><p>Movimento com intenção: reage, conduz e cria ritmo sem transformar a experiência em ruído.</p></article>
+      </div>
+    </section>
+
+    <section class="section playground">
+      <div class="playground-inner"><div class="section-label">AB / interactive arcade</div><h2>Aqui, você não apenas navega.<br><em>Você assume o controle.</em></h2><p>Pilote a AB-01, atravesse o campo orbital e abra caminho. O jogo transforma interação em parte real da experiência — não apenas em efeito visual.</p>
+        <div class="game-shell arcade">
+          <div class="game-hud"><div class="game-score">SCORE <strong id="gameScore">00000</strong></div><div class="game-status" id="gameStatus" aria-live="polite" aria-atomic="true">AB-01 EM STANDBY</div><div class="game-shield">SHIELD <strong id="gameShield">100</strong></div></div>
+          <div class="game-field arcade-field" id="gameField" tabindex="0" aria-label="Jogo AB-01. No celular, toque no campo para mover e use FIRE para disparar. O gesto vertical continua rolando a página mesmo durante a missão.">
+            <canvas id="arcadeCanvas" aria-hidden="true"></canvas>
+            <div class="arcade-overlay"><span class="arcade-badge">AB-01 / HORIZON RUN</span><button class="arcade-fire" id="arcadeFire" type="button" aria-label="Disparar">FIRE</button></div>
+          </div>
+          <div class="game-foot"><span><strong>WASD / SETAS</strong> movem · <strong>ESPAÇO</strong> dispara · no toque, toque no campo para mover e use FIRE · o swipe vertical continua a página.</span><button class="game-start" id="gameStart" type="button">LANÇAR AB-01</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section about" id="sobre"><div class="about-inner"><div class="section-label">Sobre / AB</div><h2>AB é a assinatura.<br>Andryo Barbosa é quem pensa cada detalhe.</h2><p>Eu transformo ideias em experiências digitais com direção, código e movimento — para marcas que querem ser reconhecidas antes mesmo de precisarem se explicar.</p><div class="about-meta" aria-label="Áreas de atuação"><span>DIREÇÃO</span><span>DESIGN</span><span>CODE</span><span>MOTION</span></div></div></section>
+
+    <section class="section process" id="processo">
+      <div class="process-wrap">
+        <div class="section-label">Processo / do primeiro impulso ao lançamento</div>
+        <h2 class="section-title">Uma ideia não salta etapas.<br><em>Ela ganha trajetória.</em></h2>
+        <div class="timeline" aria-label="Linha cronológica do processo">
+          <div class="timeline-track" aria-hidden="true"><span class="timeline-progress"></span><span class="timeline-beacon"></span></div>
+          <div class="steps">
+            <div class="step" data-step="01"><span>IDEIA</span></div>
+            <div class="step" data-step="02"><span>DIREÇÃO</span></div>
+            <div class="step" data-step="03"><span>DESIGN</span></div>
+            <div class="step" data-step="04"><span>CÓDIGO</span></div>
+            <div class="step" data-step="05"><span>MOVIMENTO</span></div>
+            <div class="step" data-step="06"><span>LANÇAMENTO</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" id="contato"><span class="cta-line cl1"></span><span class="cta-line cl2"></span><div class="cta-inner"><div class="section-label">AB / canal aberto</div><h2><span>Uma boa ideia</span><br><span>não precisa de</span><br><em>permissão para existir.</em></h2><p class="cta-copy">Se ela merece atenção, vamos construir uma presença à altura. O próximo sinal pode começar aqui.</p><div class="cta-transmission" id="ctaTransmission"><span class="cta-signal"></span><span class="cta-orbit"></span><span class="cta-orbit o2"></span><span class="cta-orbit o3"></span><a class="cta-btn cta-btn-v6" id="ctaButton" href="https://wa.me/5521981507521?text=Ol%C3%A1%20Andryo%2C%20vi%20a%20experi%C3%AAncia%20AB%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto." target="_blank" rel="noopener"><span class="cta-kicker">AB / TRANSMIT</span><strong>INICIAR<br>PROJETO</strong><span class="cta-sub">WHATSAPP ↗</span></a></div></div></section>
+  </main>
+
+  <footer><div><div class="footer-logo">AB</div><div class="footer-sub">ANDRYO BARBOSA — INTERACTIVE DIGITAL DIRECTION</div></div></footer>
+
+  <script>
+    window.setTimeout(function(){
+      if(document.documentElement.dataset.appReady)return;
+      document.documentElement.classList.add('app-fallback');
+      var intro=document.getElementById('intro'); if(intro)intro.remove();
+      var hero=document.getElementById('heroCopy'); if(hero)hero.style.opacity='1';
+      var header=document.getElementById('siteHeader'); if(header){header.style.opacity='1';header.classList.add('visible');}
+    },5000);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="assets/js/main.js"></script>
+  <noscript><style>#intro{display:none!important}.hero-copy,.site-header{opacity:1!important}.site-header{pointer-events:auto!important}</style></noscript>
+</body>
+</html>
