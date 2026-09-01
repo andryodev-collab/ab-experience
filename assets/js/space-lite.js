@@ -65,30 +65,8 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      vertexShader: `
-        attribute float aSpeed;
-        uniform float uTime,uScroll,uVelocity,uSize,uScrollTravel,uVelocityTravel,uWrapMin,uWrapRange,uMaxSize;
-        varying float vVelocity;
-        void main(){
-          vec3 p=position;
-          float travel=uTime*aSpeed+uScroll*uScrollTravel+uVelocity*uVelocityTravel;
-          p.z=uWrapMin+mod(position.z-uWrapMin+travel,uWrapRange);
-          vec4 mv=modelViewMatrix*vec4(p,1.0);
-          float perspective=500.0/max(70.0,-mv.z);
-          gl_PointSize=clamp(uSize*perspective*(1.0+uVelocity*.55),.7,uMaxSize);
-          gl_Position=projectionMatrix*mv;
-          vVelocity=uVelocity;
-        }`,
-      fragmentShader: `
-        uniform float uOpacity;
-        uniform vec3 uColor;
-        varying float vVelocity;
-        void main(){
-          vec2 p=gl_PointCoord-.5;
-          float d=length(p);
-          float a=smoothstep(.5,.08,d)*uOpacity*(1.0+vVelocity*.25);
-          gl_FragColor=vec4(uColor,a);
-        }`
+      vertexShader: `attribute float aSpeed;uniform float uTime,uScroll,uVelocity,uSize,uScrollTravel,uVelocityTravel,uWrapMin,uWrapRange,uMaxSize;varying float vVelocity;void main(){vec3 p=position;float travel=uTime*aSpeed+uScroll*uScrollTravel+uVelocity*uVelocityTravel;p.z=uWrapMin+mod(position.z-uWrapMin+travel,uWrapRange);vec4 mv=modelViewMatrix*vec4(p,1.0);float perspective=500.0/max(70.0,-mv.z);gl_PointSize=clamp(uSize*perspective*(1.0+uVelocity*.55),.7,uMaxSize);gl_Position=projectionMatrix*mv;vVelocity=uVelocity;}`,
+      fragmentShader: `uniform float uOpacity;uniform vec3 uColor;varying float vVelocity;void main(){vec2 p=gl_PointCoord-.5;float d=length(p);float a=smoothstep(.5,.08,d)*uOpacity*(1.0+vVelocity*.25);gl_FragColor=vec4(uColor,a);}`
     });
     const mesh = new THREE.Points(geo, material);
     scene.add(mesh);
@@ -121,19 +99,10 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
   blackHoleGroup.add(new THREE.Mesh(new THREE.SphereGeometry(78, 30, 22), coreMat));
 
   const diskUniforms = { uTime: { value: 0 }, uOpacity: { value: .9 } };
-  const diskMat = new THREE.ShaderMaterial({
-    uniforms: diskUniforms,
-    transparent: true,
-    depthWrite: false,
-    side: THREE.DoubleSide,
-    blending: THREE.AdditiveBlending,
+  const diskMat = new THREE.ShaderMaterial({ uniforms: diskUniforms, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
     vertexShader: `varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-    fragmentShader: `varying vec2 vUv;uniform float uTime;uniform float uOpacity;void main(){vec2 p=vUv-.5;float r=length(p)*2.0;float a=atan(p.y,p.x);float ring=smoothstep(1.0,.30,r)*smoothstep(.20,.50,r);float flow=.58+.42*sin(a*10.0-r*21.0-uTime*1.85);float filament=.72+.28*sin(a*23.0+r*33.0+uTime*.72);vec3 c=mix(vec3(.06,.30,.90),vec3(.88,.97,1.0),flow);gl_FragColor=vec4(c,ring*(.22+.54*flow+.16*filament)*uOpacity);}`
-  });
-  const disk = new THREE.Mesh(new THREE.RingGeometry(94, 220, 120, 3), diskMat);
-  disk.rotation.x = 1.18;
-  disk.rotation.z = -.13;
-  blackHoleGroup.add(disk);
+    fragmentShader: `varying vec2 vUv;uniform float uTime;uniform float uOpacity;void main(){vec2 p=vUv-.5;float r=length(p)*2.0;float a=atan(p.y,p.x);float ring=smoothstep(1.0,.30,r)*smoothstep(.20,.50,r);float flow=.58+.42*sin(a*10.0-r*21.0-uTime*1.85);float filament=.72+.28*sin(a*23.0+r*33.0+uTime*.72);vec3 c=mix(vec3(.06,.30,.90),vec3(.88,.97,1.0),flow);gl_FragColor=vec4(c,ring*(.22+.54*flow+.16*filament)*uOpacity);}` });
+  const disk = new THREE.Mesh(new THREE.RingGeometry(94, 220, 120, 3), diskMat); disk.rotation.x = 1.18; disk.rotation.z = -.13; blackHoleGroup.add(disk);
 
   const haloMat = new THREE.MeshBasicMaterial({ color: 0x8bd6ff, transparent: true, opacity: .34, depthWrite: false, blending: THREE.AdditiveBlending });
   blackHoleGroup.add(new THREE.Mesh(new THREE.TorusGeometry(104, 1.6, 8, 72), haloMat));
@@ -167,12 +136,11 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
 
   function frame(now = performance.now()) {
     if (!running) return;
-    const minFrame = performanceMode === 'game' ? 33 : 21;
-    if (now - lastRender < minFrame) {
-      rafId = requestAnimationFrame(frame);
-      return;
-    }
+    const activeMotion = scrollVelocity > .035 || velocityTarget > .035;
+    const minFrame = performanceMode === 'game' ? 33 : (activeMotion ? 16 : 24);
+    if (now - lastRender < minFrame) { rafId = requestAnimationFrame(frame); return; }
     lastRender = now;
+
     const dt = Math.min(clock.getDelta(), .04);
     const t = clock.elapsedTime;
     scrollVelocity += (velocityTarget - scrollVelocity) * .18;
@@ -184,13 +152,12 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
       camera.position.x = Math.sin(t * .15) * 5.5 * sway;
       camera.position.y = Math.cos(t * .12) * 4.2 * sway;
       camera.position.z = 900 + scrollProgress * 104 - scrollVelocity * 12;
-      camera.fov = 70 + scrollVelocity * 2.4;
-      camera.updateProjectionMatrix();
+      const targetFov = 70 + scrollVelocity * 2.4;
+      if (Math.abs(camera.fov - targetFov) > .05) { camera.fov += (targetFov - camera.fov) * .18; camera.updateProjectionMatrix(); }
       camera.lookAt(0, 0, -190 - scrollProgress * 70);
 
       disk.rotation.z = -.13 + t * .038;
       diskUniforms.uTime.value = t;
-
       [farStars, midStars, nearDust].forEach(layer => {
         layer.uniforms.uTime.value = t;
         layer.uniforms.uScroll.value = scrollProgress;
@@ -228,25 +195,15 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
     camera.aspect = innerWidth / innerHeight;
     camera.fov = getIsMobile() ? 70 : 62;
     camera.updateProjectionMatrix();
-    if (reduced) {
-      setBhVisual();
-      renderer.render(scene, camera);
-    }
+    if (reduced) { setBhVisual(); renderer.render(scene, camera); }
   }
   function pause() { running = false; cancelAnimationFrame(rafId); }
   function resume() { if (running) return; running = true; clock.getDelta(); rafId = requestAnimationFrame(frame); }
   function setPerformanceMode(mode = 'normal') { performanceMode = mode === 'game' ? 'game' : 'normal'; }
   function pulseSignal(index = 0) { if (reduced) return; signalBoost = Math.max(signalBoost, .55 + Math.min(index, 4) * .06); }
 
-  canvas.addEventListener('webglcontextlost', e => {
-    e.preventDefault();
-    pause();
-    document.documentElement.classList.add('webgl-fallback');
-  });
-  canvas.addEventListener('webglcontextrestored', () => {
-    document.documentElement.classList.remove('webgl-fallback');
-    resume();
-  });
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); pause(); document.documentElement.classList.add('webgl-fallback'); });
+  canvas.addEventListener('webglcontextrestored', () => { document.documentElement.classList.remove('webgl-fallback'); resume(); });
 
   return { bhState, resize, pause, resume, setPerformanceMode, pulseSignal, renderer, scene, camera };
 }
