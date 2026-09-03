@@ -1,4 +1,4 @@
-import { reduced, getIsMobile, mobileQuery, getPerformanceProfile } from './config.js';
+import { reduced, getIsMobile, mobileQuery } from './config.js';
 import { initAudio } from './audio.js';
 import { initIntro } from './intro.js';
 import { initMotion } from './motion.js';
@@ -14,15 +14,14 @@ if(!gsap||!ScrollTrigger){staticFallback();throw new Error('AB: animation runtim
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ignoreMobileResize:true});
 initAudio();
+initTextReveal({reduced});
 initIntro({bhState,reduced});
 initMotion({bhState,reduced,getIsMobile,onWordSignal:i=>space?.pulseSignal?.(i)});
 if(!reduced)initJourney({getIsMobile});
 initUI({reduced});
-requestAnimationFrame(()=>initTextReveal({reduced}));
 document.documentElement.dataset.appReady='ui';
 
-const spaceModule=getPerformanceProfile()==='efficient'?'./space-lite.js':'./space.js';
-import(spaceModule).then(({initSpace})=>{space=initSpace({reduced,getIsMobile,bhState});document.documentElement.dataset.appReady='full';}).catch(err=>{console.warn('AB WebGL fallback',err);document.documentElement.classList.add('webgl-fallback');});
+import('./space.js').then(({initSpace})=>{space=initSpace({reduced,getIsMobile,bhState});document.documentElement.dataset.appReady='full';}).catch(err=>{console.warn('AB WebGL fallback',err);document.documentElement.classList.add('webgl-fallback');});
 
 let resizeRAF=0,lastW=innerWidth,lastH=innerHeight;
 addEventListener('resize',()=>{cancelAnimationFrame(resizeRAF);resizeRAF=requestAnimationFrame(()=>{const dw=Math.abs(innerWidth-lastW),dh=Math.abs(innerHeight-lastH);space?.resize?.();if(dw>8||dh>120)ScrollTrigger.refresh();lastW=innerWidth;lastH=innerHeight;});},{passive:true});
@@ -32,6 +31,6 @@ document.addEventListener('visibilitychange',()=>{document.hidden?space?.pause?.
 const playground=document.querySelector('.playground');
 if(playground){
   const loadGame=async()=>{if(gameLoaded)return;gameLoaded=true;const {initGame}=await import('./game.js');initGame({onActivity:on=>space?.setPerformanceMode?.(on?'game':'normal')});};
-  if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();loadGame();}},{rootMargin:'420px 0px'});observer.observe(playground);}else setTimeout(loadGame,1800);
+  if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){observer.disconnect();loadGame();}},{rootMargin:'650px 0px'});observer.observe(playground);}else setTimeout(loadGame,1600);
 }
 setTimeout(()=>{if(!document.documentElement.dataset.appReady)staticFallback();},5200);

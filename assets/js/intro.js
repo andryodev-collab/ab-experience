@@ -34,6 +34,7 @@ export function initIntro({ bhState, reduced }) {
     return;
   }
 
+  // A intro nunca bloqueia o scroll. Se o visitante rolar, ela cede imediatamente à página.
   addEventListener('scroll',onScroll,{passive:true});
   bhState.scale=.66;bhState.opacity=.52;bhState.refOpacity=.08;
   gsap.set('#journeyCore',{opacity:0,x:innerWidth*.5,y:innerHeight*.5,scale:.42});

@@ -60,13 +60,14 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
   }
 
   const starsGeo=new THREE.BufferGeometry();
-  const starCount=quality.stars,starPos=new Float32Array(starCount*3),starSpeed=new Float32Array(starCount);
-  for(let i=0;i<starCount;i++){starPos[i*3]=(Math.random()-.5)*2500;starPos[i*3+1]=(Math.random()-.5)*1450;starPos[i*3+2]=-1700+Math.random()*2450;starSpeed[i]=5+Math.random()*19;}
-  starsGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));starsGeo.setAttribute('aSpeed',new THREE.BufferAttribute(starSpeed,1));
+  const starCount=quality.stars,starPos=new Float32Array(starCount*3),starSpeed=new Float32Array(starCount),starPhase=new Float32Array(starCount),starTint=new Float32Array(starCount);
+  for(let i=0;i<starCount;i++){starPos[i*3]=(Math.random()-.5)*2500;starPos[i*3+1]=(Math.random()-.5)*1450;starPos[i*3+2]=-1700+Math.random()*2450;starSpeed[i]=5+Math.random()*19;starPhase[i]=Math.random()*Math.PI*2;starTint[i]=Math.random();}
+  starsGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));starsGeo.setAttribute('aSpeed',new THREE.BufferAttribute(starSpeed,1));starsGeo.setAttribute('aPhase',new THREE.BufferAttribute(starPhase,1));starsGeo.setAttribute('aTint',new THREE.BufferAttribute(starTint,1));
   const starUniforms={uTime:{value:0},uSize:{value:isCoarse?1.75:2.1},uScroll:{value:0},uVelocity:{value:0}};
+  // Twinkle (per-star phase) and color temperature (aTint: cold blue-white to warm white) for a more physically real starfield.
   const stars=new THREE.Points(starsGeo,new THREE.ShaderMaterial({uniforms:starUniforms,transparent:true,depthWrite:false,
-    vertexShader:`attribute float aSpeed;uniform float uTime;uniform float uSize;uniform float uScroll;uniform float uVelocity;void main(){vec3 p=position;float travel=uTime*aSpeed+uScroll*1180.0+uVelocity*150.0;p.z=-1700.0+mod(position.z+1700.0+travel,2550.0);vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(uSize*(520.0/max(80.0,-mv.z)),.65,3.2);gl_Position=projectionMatrix*mv;}`,
-    fragmentShader:`void main(){vec2 p=gl_PointCoord-.5;float a=smoothstep(.5,.12,length(p))*.82;gl_FragColor=vec4(.85,.93,1.0,a);}`
+    vertexShader:`attribute float aSpeed;attribute float aPhase;attribute float aTint;uniform float uTime;uniform float uSize;uniform float uScroll;uniform float uVelocity;varying float vTwinkle;varying float vTint;void main(){vec3 p=position;float travel=uTime*aSpeed+uScroll*1180.0+uVelocity*150.0;p.z=-1700.0+mod(position.z+1700.0+travel,2550.0);vTwinkle=.72+.28*sin(uTime*(1.3+aTint*1.4)+aPhase);vTint=aTint;vec4 mv=modelViewMatrix*vec4(p,1.0);gl_PointSize=clamp(uSize*vTwinkle*(520.0/max(80.0,-mv.z)),.65,3.2);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying float vTwinkle;varying float vTint;void main(){vec2 p=gl_PointCoord-.5;float a=smoothstep(.5,.12,length(p))*.82*vTwinkle;vec3 cold=vec3(.72,.85,1.0);vec3 warm=vec3(1.0,.92,.82);vec3 col=mix(cold,warm,smoothstep(.55,1.0,vTint));gl_FragColor=vec4(col,a);}`
   }));scene.add(stars);
 
   const dustGeo=new THREE.BufferGeometry(),dustCount=quality.dust,dustPos=new Float32Array(dustCount*3),dustSpeed=new Float32Array(dustCount);
@@ -78,16 +79,27 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
     fragmentShader:`void main(){float a=smoothstep(.5,.08,length(gl_PointCoord-.5))*.14;gl_FragColor=vec4(.40,.71,1.0,a);}`
   }));scene.add(dust);
 
+  // Nebula clouds merged into a single geometry (one draw call instead of one per column).
   const nebulaGroup = new THREE.Group(); scene.add(nebulaGroup);
-  for (let col = 0; col < quality.nebulaCols; col++) {
-    const count = quality.nebulaPoints, g = new THREE.BufferGeometry(), p = new Float32Array(count * 3), baseX = -520 + col * 205 + Math.random() * 70;
-    for (let i = 0; i < count; i++) {
-      const y = -560 + Math.random() * 1120, t = (y + 560) / 1120;
-      p[i * 3] = baseX + (Math.random() - .5) * (90 + 150 * (1 - t)); p[i * 3 + 1] = y + (Math.random() - .5) * 80; p[i * 3 + 2] = -820 - Math.random() * 620;
+  {
+    const cols = quality.nebulaCols, perCol = quality.nebulaPoints, total = cols * perCol;
+    const pos = new Float32Array(total * 3), col = new Float32Array(total * 3);
+    const palette = [0x14335b, 0x28527a, 0x4a3153, 0x5b3a2e, 0x233c63, 0x315d72].map(c => new THREE.Color(c));
+    let idx = 0;
+    for (let c = 0; c < cols; c++) {
+      const baseX = -520 + c * 205 + Math.random() * 70, tint = palette[c % palette.length];
+      for (let i = 0; i < perCol; i++, idx++) {
+        const y = -560 + Math.random() * 1120, t = (y + 560) / 1120;
+        pos[idx * 3] = baseX + (Math.random() - .5) * (90 + 150 * (1 - t));
+        pos[idx * 3 + 1] = y + (Math.random() - .5) * 80;
+        pos[idx * 3 + 2] = -820 - Math.random() * 620;
+        col[idx * 3] = tint.r; col[idx * 3 + 1] = tint.g; col[idx * 3 + 2] = tint.b;
+      }
     }
-    g.setAttribute('position', new THREE.BufferAttribute(p, 3));
-    const colors = [0x14335b, 0x28527a, 0x4a3153, 0x5b3a2e, 0x233c63, 0x315d72];
-    const cloud = new THREE.Points(g, new THREE.PointsMaterial({ color: colors[col % colors.length], size: 22 + Math.random() * 20, transparent: true, opacity: .038, depthWrite: false, blending: THREE.AdditiveBlending }));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const cloud = new THREE.Points(g, new THREE.PointsMaterial({ vertexColors: true, size: 30, transparent: true, opacity: .038, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true }));
     nebulaGroup.add(cloud);
   }
 
@@ -108,7 +120,7 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
   const diskMat = new THREE.ShaderMaterial({
     uniforms: diskUniforms, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
     vertexShader: `varying vec2 vUv; varying vec3 vPos; void main(){vUv=uv;vPos=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
-    fragmentShader: `varying vec2 vUv; uniform float uTime; uniform float uOpacity; float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} void main(){vec2 p=vUv-.5; float r=length(p)*2.0; float a=atan(p.y,p.x); float ring=smoothstep(1.0,.25,r)*smoothstep(.18,.48,r); float flow=.52+.48*sin(a*12.0-r*25.0-uTime*2.35); float fil=.55+.45*sin(a*31.0+r*45.0+uTime*1.15); float grain=hash(floor((p+uTime*.002)*240.0)); float hot=pow(max(0.0,1.0-abs(r-.48)*3.7),3.0); float alpha=ring*(.20+.52*flow+.22*fil+.08*grain)*uOpacity; vec3 cold=vec3(.08,.35,.95),white=vec3(.92,.98,1.0); vec3 color=mix(cold,white,clamp(hot*1.5+flow*.22,0.0,1.0)); gl_FragColor=vec4(color,alpha);}`
+    fragmentShader: `varying vec2 vUv; uniform float uTime; uniform float uOpacity; float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} void main(){vec2 p=vUv-.5; float r=length(p)*2.0; float a=atan(p.y,p.x); float ring=smoothstep(1.0,.25,r)*smoothstep(.18,.48,r); float flow=.52+.48*sin(a*12.0-r*25.0-uTime*2.35); float fil=.55+.45*sin(a*31.0+r*45.0+uTime*1.15); float grain=hash(floor((p+uTime*.002)*240.0)); float hot=pow(max(0.0,1.0-abs(r-.48)*3.7),3.0); float doppler=.62+.5*cos(a-1.05); float alpha=ring*(.20+.52*flow+.22*fil+.08*grain)*uOpacity*doppler; vec3 cold=vec3(.08,.35,.95),white=vec3(.92,.98,1.0); vec3 color=mix(cold,white,clamp(hot*1.5+flow*.22+doppler*.18,0.0,1.0)); gl_FragColor=vec4(color,alpha);}`
   });
   const disk = new THREE.Mesh(new THREE.RingGeometry(isMobile ? 100 : 132, isMobile ? 245 : 310, quality.ring, 4), diskMat); disk.rotation.x = 1.18; disk.rotation.z = -.13; blackHoleGroup.add(disk);
 
@@ -147,6 +159,7 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
   for (let i = 0; i < quality.asteroids; i++) makeAsteroid(i);
 
   function setBhVisual() {
+    // O buraco negro continua presente durante toda a viagem, mas recua com o progresso global da página.
     const p=scrollProgress, retreat=1-.78*Math.pow(p,.72), fade=1-.76*p;
     const visualOpacity=bhState.opacity*fade;
     blackHoleGroup.scale.setScalar(bhState.scale*retreat);
