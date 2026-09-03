@@ -12,10 +12,10 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
   const isCoarse = getIsCoarse();
   const profile = getPerformanceProfile();
   const quality = profile==='high'
-    ? {maxDpr:1.55,maxPixels:3200000,stars:2900,dust:580,nebulaCols:6,nebulaPoints:440,asteroids:6,bloom:.45,sphereW:64,sphereH:48,ring:240,torus:160}
+    ? {maxDpr:1.55,maxPixels:3200000,stars:2900,dust:580,nebulaCols:6,nebulaPoints:440,asteroids:6,bloom:.33,sphereW:64,sphereH:48,ring:240,torus:160}
     : profile==='balanced'
-      ? {maxDpr:1.35,maxPixels:2100000,stars:2100,dust:420,nebulaCols:5,nebulaPoints:340,asteroids:4,bloom:.36,sphereW:56,sphereH:40,ring:208,torus:144}
-      : {maxDpr:1.2,maxPixels:1350000,stars:1400,dust:280,nebulaCols:3,nebulaPoints:250,asteroids:3,bloom:.28,sphereW:48,sphereH:32,ring:176,torus:128};
+      ? {maxDpr:1.35,maxPixels:2100000,stars:2100,dust:420,nebulaCols:5,nebulaPoints:340,asteroids:4,bloom:.26,sphereW:56,sphereH:40,ring:208,torus:144}
+      : {maxDpr:1.2,maxPixels:1350000,stars:1400,dust:280,nebulaCols:3,nebulaPoints:250,asteroids:3,bloom:.19,sphereW:48,sphereH:32,ring:176,torus:128};
   document.documentElement.dataset.performanceProfile=profile;
   const calcDpr=()=>Math.max(.82,Math.min(devicePixelRatio,quality.maxDpr,Math.sqrt(quality.maxPixels/Math.max(1,innerWidth*innerHeight))));
   const canvas = document.getElementById('space-canvas');
@@ -140,8 +140,8 @@ export function initSpace({ reduced, getIsMobile, bhState }) {
     bhRefPlane = new THREE.Mesh(new THREE.PlaneGeometry(isMobile ? 620 : 820, isMobile ? 349 : 461), mat); bhRefPlane.position.z = -105; blackHoleGroup.add(bhRefPlane);
   }, undefined, () => {});
 
-  scene.add(new THREE.AmbientLight(0x7caeff, .34));
-  const keyLight = new THREE.PointLight(0x8fd5ff, 42, 1300, 1.7); keyLight.position.set(-280, 180, 360); scene.add(keyLight);
+  scene.add(new THREE.AmbientLight(0x7caeff, .22));
+  const keyLight = new THREE.PointLight(0x8fd5ff, 30, 1300, 1.8); keyLight.position.set(-280, 180, 360); scene.add(keyLight);
 
   const asteroids = [];
   function makeAsteroid(i) {

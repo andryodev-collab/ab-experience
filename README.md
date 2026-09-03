@@ -1,5 +1,8 @@
 # AB — Andryo Barbosa / Interactive Digital Direction
 
+## V20 — Luz no vazio
+Cursor vira uma luz que revela o universo ao redor dele (só ponteiro fino); resto da tela mais escuro e contido, bloom/luzes reduzidos, Núcleo AB e CTA mais enxutos. Ver `QA-V20.md`.
+
 ## V19 — Sinal quente no vazio frio
 Uma única cor quente (âmbar) reservada para os pontos de contato: CTA, palavra "AÇÃO" e pill de disponibilidade. Serviços viraram cards com ícone, glow no cursor e tilt 3D. Barra de progresso de scroll no topo. Ver `QA-V19.md`.
 

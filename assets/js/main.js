@@ -5,11 +5,13 @@ import { initMotion } from './motion.js';
 import { initJourney } from './journey.js';
 import { initUI } from './ui.js';
 import { initTextReveal } from './text-reveal.js';
+import { initCursorLight } from './cursor-light.js';
 
 const gsap=window.gsap,ScrollTrigger=window.ScrollTrigger;
 const bhState={scale:.66,x:getIsMobile()?0:175,y:getIsMobile()?-45:-18,z:20,opacity:.52,refOpacity:.08};
 let space=null,gameLoaded=false;
 function staticFallback(){document.documentElement.classList.add('app-fallback');document.getElementById('intro')?.remove();const hero=document.getElementById('heroCopy');if(hero)hero.style.opacity='1';const header=document.getElementById('siteHeader');if(header){header.style.opacity='1';header.classList.add('visible');}}
+initCursorLight({reduced});
 if(!gsap||!ScrollTrigger){staticFallback();throw new Error('AB: animation runtime unavailable');}
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ignoreMobileResize:true});
