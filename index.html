@@ -27,6 +27,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"><i id="scrollProgressBar"></i></div>
 <audio id="ambientAudio" data-src="assets/audio/ab-cosmic-score.mp3" loop preload="none"></audio>
   <canvas id="space-canvas" aria-hidden="true"></canvas>
   <div class="cosmic-media" id="cosmicMedia" aria-hidden="true"></div>
@@ -61,7 +62,7 @@
       <div class="portal-sticky">
         <div class="hero-stage">
           <div id="blackHoleAnchor" aria-hidden="true"></div>
-          <div class="hero-copy" id="heroCopy"><span class="hero-kicker">AB / EXPERIÊNCIAS DIGITAIS</span><h1>Algumas marcas passam.<br><em>Outras criam gravidade.</em></h1><p>Eu desenho experiências digitais que puxam o olhar, sustentam atenção e transformam presença em memória.</p></div>
+          <div class="hero-copy" id="heroCopy"><span class="availability"><i aria-hidden="true"></i>Aberto a novos projetos</span><span class="hero-kicker">AB / EXPERIÊNCIAS DIGITAIS</span><h1>Algumas marcas passam.<br><em>Outras criam gravidade.</em></h1><p>Eu desenho experiências digitais que puxam o olhar, sustentam atenção e transformam presença em memória.</p></div>
           <div class="scroll-hint">scroll / iniciar trajetória</div>
         </div>
         <div class="hud-layer" id="hudLayer" aria-label="Princípios da experiência AB">
@@ -83,10 +84,12 @@
       <div class="services-wrap">
         <div class="section-label">O que ganha forma aqui</div>
         <h2 class="section-title">O digital pode<br>informar.<br><em>Eu quero que envolva.</em></h2>
-        <article class="service"><div class="num">01</div><h3>Landing Pages</h3><p>Uma página com foco absoluto: atrair, conduzir e transformar interesse em próxima ação.</p></article>
-        <article class="service"><div class="num">02</div><h3>Sites Autorais</h3><p>Presenças digitais com identidade própria — para sua marca não parecer uma variação do que já existe.</p></article>
-        <article class="service"><div class="num">03</div><h3>Experiências Digitais</h3><p>Interface, narrativa e tecnologia trabalhando juntas até o visitante esquecer que está apenas navegando.</p></article>
-        <article class="service"><div class="num">04</div><h3>Motion & Interação</h3><p>Movimento com intenção: reage, conduz e cria ritmo sem transformar a experiência em ruído.</p></article>
+        <div class="services-grid">
+          <article class="service"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor" stroke="none"/></svg></span><div class="num">01</div><h3>Landing Pages</h3><p>Uma página com foco absoluto: atrair, conduzir e transformar interesse em próxima ação.</p></article>
+          <article class="service"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4L12 3z"/></svg></span><div class="num">02</div><h3>Sites Autorais</h3><p>Presenças digitais com identidade própria — para sua marca não parecer uma variação do que já existe.</p></article>
+          <article class="service"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4"/><ellipse cx="12" cy="12" rx="4" ry="9" transform="rotate(48 12 12)"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg></span><div class="num">03</div><h3>Experiências Digitais</h3><p>Interface, narrativa e tecnologia trabalhando juntas até o visitante esquecer que está apenas navegando.</p></article>
+          <article class="service"><span class="service-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12h3l2-7 3 14 3-10 2 3h7"/></svg></span><div class="num">04</div><h3>Motion & Interação</h3><p>Movimento com intenção: reage, conduz e cria ritmo sem transformar a experiência em ruído.</p></article>
+        </div>
       </div>
     </section>
 

@@ -1,5 +1,8 @@
 # AB — Andryo Barbosa / Interactive Digital Direction
 
+## V19 — Sinal quente no vazio frio
+Uma única cor quente (âmbar) reservada para os pontos de contato: CTA, palavra "AÇÃO" e pill de disponibilidade. Serviços viraram cards com ícone, glow no cursor e tilt 3D. Barra de progresso de scroll no topo. Ver `QA-V19.md`.
+
 ## V18 — Lean & Realismo
 Reveal de texto dividido em dois modos (letra por letra só em títulos; parágrafos em fade único), nebulosa mesclada em um único draw call, estrelas com twinkle e temperatura de cor, disco de acreção com assimetria de brilho angular. Ver `QA-V18.md`.
 

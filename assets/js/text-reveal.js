@@ -96,6 +96,7 @@ export function initTextReveal({ reduced = false } = {}) {
   ];
 
   const fadeConfigs = [
+    ['.availability', { trigger: '.hero-stage', start: 'top top', end: '8% top' }],
     ['.hero-copy p', { trigger: '.hero-stage', start: '25% top', end: '46% top' }],
     ['.hud small', { start: 'top 79%', end: 'top 48%' }],
     ['.service p', { start: 'top 84%', end: 'top 49%' }],

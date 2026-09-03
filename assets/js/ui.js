@@ -30,4 +30,29 @@ export function initUI({ reduced }) {
   const observe=(el,className)=>{if(!el)return;if(!('IntersectionObserver'in window)){el.classList.add(className);return;}const io=new IntersectionObserver(es=>es.forEach(e=>el.classList.toggle(className,e.isIntersecting)),{rootMargin:'180px 0px'});io.observe(el);};
   observe(document.querySelector('.cta-transmission'),'is-active');
   document.addEventListener('ab:signal-captured',()=>{const core=document.getElementById('journeyCore');if(!core)return;core.classList.add('signal-captured');setTimeout(()=>core.classList.remove('signal-captured'),1200);});
+
+  // Service cards: cursor-following glow + a hint of magnetic tilt (fine pointer only).
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  document.querySelectorAll('.service').forEach(card=>{
+    if(fine&&!reduced){
+      const qrx=gsap.quickTo(card,'rotationX',{duration:.5,ease:'power3.out'}),qry=gsap.quickTo(card,'rotationY',{duration:.5,ease:'power3.out'});
+      card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+        card.style.setProperty('--mx',(x*100).toFixed(1)+'%');card.style.setProperty('--my',(y*100).toFixed(1)+'%');
+        qrx((.5-y)*4);qry((x-.5)*4);
+      },{passive:true});
+      card.addEventListener('pointerleave',()=>{qrx(0);qry(0);});
+    }
+  });
+
+  // Scroll progress — the visible readout of how far into the trajectory the visitor is.
+  const bar=document.getElementById('scrollProgressBar');
+  if(bar){
+    let raf=0;
+    const sync=()=>{raf=0;const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);bar.style.width=(Math.min(1,scrollY/max)*100).toFixed(2)+'%';};
+    const onScroll=()=>{if(!raf)raf=requestAnimationFrame(sync);};
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll,{passive:true});
+    sync();
+  }
 }
